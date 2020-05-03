@@ -1,0 +1,117 @@
+
+
+' !define AgentBorderThickness 4
+' !define AgentBorderColor green
+
+
+
+
+!define table(name) class name << (T, #FFAAAA) >>
+!define primary_key(x) <b><u>x</u>_ID</b>
+!define unique(x) <color:blue>x</color>
+!define not_null(x) <u>x</u> <b>NOT NULL</b> 
+!define reference(x)  x<b>_ID</b> 
+
+
+
+hide methods
+hide stereotypes
+
+
+table(Person){
+    
+    primary_key(unique(person))
+    not_null(firstname) 
+    not_null(lastname)
+    not_null(e-mail)
+
+    
+}
+
+table(Subjects){
+    primary_key(unique(subject))
+    not_null(subject) 
+    not_null(reference(person))
+}
+
+table(Wallets){
+    primary_key(unique(wallet))
+    not_null(tokens Integer)
+}
+
+table(Students){
+    primary_key(unique(student))
+    not_null(person_ID)
+}
+
+table(Teachers){
+    primary_key(unique(teacher))
+    not_null(person_ID)
+}
+
+table(Timetables){
+    primary_key(unique(timetable))
+    not_null(person_ID)
+    not_null(subject_ID)
+    not_null(time)
+}
+
+table(AssignedSubjects){
+     primary_key(unique(assignedsubject))
+     not_null(student_ID)
+     not_null(subject_ID)
+}
+
+table(Qualifications){
+    primary_key(unique(qualification))
+    not_null(teacher_ID)
+    not_null(subject_ID)
+}
+
+
+
+Person::person <-down- Wallets::person_ID : << person references \nwallet
+Person::person_ID <-right- Students::person_ID : < student references \nperson
+Person::person_ID <-down- Teachers::person_ID : ^ teacher references \nperson
+
+Timetables::person_ID -up-> Person::person_ID
+Timetables::subject_ID -down-> Subjects::subject_ID
+
+AssignedSubjects::student_ID -up-> Students::student_ID
+AssignedSubjects::subject_ID -down-> Subjects::subject_ID
+
+Qualifications::teacher_ID -up-> Teachers::teacher_ID
+Qualifications::subject_ID -down-> Subjects::subject_ID
+
+table(MenuItems){
+    primary_key(unique(menuitem))
+    not_null(item)
+    not_null(price)
+    not_null(sold_qty)
+}
+
+table(Customers){
+    primary_key(unique(customer))
+    not_null(reference(person))
+    not_null(reference(menuitem))
+    not_null(qty)
+    not_null(total)
+}
+
+
+
+Customers::menuitem_ID -right-> MenuItems::menuitem_ID
+Person::person_ID <-left- Customers::customer_ID
+
+
+table(Lessons){
+    primary_key(unique(lesson))
+    not_null(reference(subject))
+    not_null(reference(teacher))
+    not_null(reference(student))
+}
+
+Lessons::teacher_ID -right-> Teachers::teacher_ID 
+Lessons::student_ID -left-> Students::student_ID :  lesson references student
+Lessons::subject_ID --> Subjects::subject_ID 
+

@@ -1,0 +1,10 @@
+
+interface Shape {
+   void draw();
+}
+
+class Rectangle implements Shape {
+
+
+   public void draw() {}
+}
